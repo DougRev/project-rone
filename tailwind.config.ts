@@ -1,18 +1,19 @@
-import type { Config } from "tailwindcss";
-
-export default {
+/** @type {import('tailwindcss').Config} */
+module.exports = {
   content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx}"
   ],
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        win95gray: "#C0C0C0",
+        win95blue: "#000080",
+        win95background: "#008080",
+      },
+      fontFamily: {
+        sans: ['"MS Sans Serif"', 'Tahoma', 'sans-serif'],
       },
     },
   },
   plugins: [],
-} satisfies Config;
+}
