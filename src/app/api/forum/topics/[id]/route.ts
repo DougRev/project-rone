@@ -6,34 +6,6 @@ import { authOptions } from "../../../auth/[...nextauth]/options";
 
 const prisma = new PrismaClient();
 
-export async function GET(request: Request) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const id = searchParams.get("id");
-    if (!id) {
-      return NextResponse.json(
-        { success: false, error: "Missing id" },
-        { status: 400 }
-      );
-    }
-
-    const topic = await prisma.topic.findUnique({ where: { id } });
-    if (!topic) {
-      return NextResponse.json(
-        { success: false, error: "Topic not found" },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json({ success: true, topic });
-  } catch {
-    return NextResponse.json(
-      { success: false, error: "Failed to fetch topic" },
-      { status: 500 }
-    );
-  }
-}
-
 export async function PUT(request: Request) {
   try {
     const session = await getServerSession(authOptions);
