@@ -25,8 +25,8 @@ const icons = [
 
 const sideQuests: SideQuest[] = [
   { title: "✅ Try Every Crumble Cookie in NYC", videoId: "vWB5kL1gXwM" },
-  { title: "Times Square Rap CD Review", link: "/forum/1" },
-  { title: "Discussion Thread 2", link: "/forum/2" },
+  { title: "Times Square Rap CD Review", link: "" },
+  { title: "Warm Ones", link: "" },
 ];
 
 function DesktopWindow({

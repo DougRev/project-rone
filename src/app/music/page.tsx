@@ -24,7 +24,6 @@ export default function Music() {
   const router = useRouter();
 
   // Set initial subscriber count to 19,900 for testing
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [subscriberCount, setSubscriberCount] = useState<number>(19900);
 
   // The selected track is stored as the track object (it may have a "url" or "files" property)
@@ -33,22 +32,6 @@ export default function Music() {
   const [selectedFile, setSelectedFile] = useState(
     tracks[0].files ? tracks[0].files[0] : null
   );
-
-  // (Subscriber fetching code is commented out for testing)
-  // useEffect(() => {
-  //   async function fetchSubscribers() {
-  //     try {
-  //       const res = await fetch("/api/youtube/channel-stats");
-  //       const data = await res.json();
-  //       if (data.success) {
-  //         setSubscriberCount(parseInt(data.subscriberCount, 10));
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching subscribers:", error);
-  //     }
-  //   }
-  //   fetchSubscribers();
-  // }, []);
 
   // Handler for selecting a track from the sidebar.
   function handleSelectTrack(track: typeof tracks[number]) {
@@ -88,9 +71,10 @@ export default function Music() {
       </div>
 
       {/* Main Content */}
-      <div className="flex flex-grow p-4">
+      {/* For mobile: stack vertically; for md+ screens: display as row */}
+      <div className="flex flex-col md:flex-row flex-grow p-4">
         {/* Sidebar with Track Library */}
-        <div className="w-1/4 bg-win95gray border border-black p-3">
+        <div className="w-full md:w-1/4 bg-win95gray border border-black p-3 mb-4 md:mb-0 md:mr-4">
           <h2 className="text-md font-bold mb-2">🎼 Track Library</h2>
           <ul className="space-y-2">
             {tracks.map((track, index) => (
@@ -111,6 +95,7 @@ export default function Music() {
           {mediaAvailable && (
             <h2 className="text-xl font-bold mb-2">Now Playing</h2>
           )}
+
           {/* If the selected track has a "files" array, render a list of distracks */}
           {selectedTrack.files ? (
             <div className="w-full max-w-md">
@@ -165,10 +150,12 @@ export default function Music() {
               )}
             </div>
           ) : selectedTrack.url && selectedTrack.url !== "example" ? (
-            <audio controls className="w-full max-w-md">
-              <source src={selectedTrack.url} type="audio/mpeg" />
-              Your browser does not support the audio element.
-            </audio>
+            <div className="w-full max-w-md">
+              <audio controls className="w-full">
+                <source src={selectedTrack.url} type="audio/mpeg" />
+                Your browser does not support the audio element.
+              </audio>
+            </div>
           ) : (
             <p className="text-xl font-bold">Coming Soon</p>
           )}

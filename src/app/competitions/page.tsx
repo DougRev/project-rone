@@ -12,7 +12,6 @@ const competitions = [
   { title: "Human vs Lazer", url: "" },
   { title: "24 Hours in a U-Haul", url: "" },
   { title: "7ft Rim Dunk Contest", url: "" },
-
 ];
 
 export default function Competitions() {
@@ -39,9 +38,10 @@ export default function Competitions() {
       </div>
 
       {/* Main Content */}
-      <div className="flex flex-grow p-4">
+      {/* For mobile: stack vertically; for md+ screens: display as row */}
+      <div className="flex flex-col md:flex-row flex-grow p-4">
         {/* Sidebar with Video Library */}
-        <div className="w-1/4 bg-win95gray border border-black p-3">
+        <div className="w-full md:w-1/4 bg-win95gray border border-black p-3 mb-4 md:mb-0 md:mr-4">
           <h2 className="text-md font-bold mb-2">🎬 Video Library</h2>
           <ul className="space-y-2">
             {competitions.map((video, index) => (
@@ -61,14 +61,16 @@ export default function Competitions() {
           {selectedVideo.url ? (
             <>
               <h2 className="text-xl font-bold mb-2">Now Playing</h2>
-              <iframe
-                width="640"
-                height="360"
-                src={selectedVideo.url}
-                title="Video player"
-                frameBorder="0"
-                allowFullScreen
-              ></iframe>
+              <div className="w-full max-w-md relative pb-[56.25%]">
+                {/* Responsive container for 16:9 aspect ratio */}
+                <iframe
+                  className="absolute top-0 left-0 w-full h-full"
+                  src={selectedVideo.url}
+                  title="Video player"
+                  frameBorder="0"
+                  allowFullScreen
+                ></iframe>
+              </div>
             </>
           ) : (
             <p className="text-xl font-bold">Coming Soon</p>
