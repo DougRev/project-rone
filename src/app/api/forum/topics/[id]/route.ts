@@ -1,4 +1,3 @@
-// src/app/api/forum/topics/[id]/route.ts
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth";
@@ -6,40 +5,44 @@ import { authOptions } from "../../../auth/[...nextauth]/options";
 
 const prisma = new PrismaClient();
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
-    try {
-      const { id } = params; // Extract ID from the route params
-  
-      if (!id) {
-        console.error("🚨 Missing topic ID in API request");
-        return NextResponse.json(
-          { success: false, error: "Missing id" },
-          { status: 400 }
-        );
-      }
-  
-      console.log(`🔍 Fetching topic with ID: ${id}`);
-  
-      const topic = await prisma.topic.findUnique({ where: { id } });
-  
-      if (!topic) {
-        return NextResponse.json(
-          { success: false, error: "Topic not found" },
-          { status: 404 }
-        );
-      }
-  
-      console.log(`✅ Topic found:`, topic);
-  
-      return NextResponse.json({ success: true, topic });
-    } catch (error) {
-      console.error("❌ Error fetching topic:", error);
+export async function GET(
+  request: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  try {
+    // Await the params since they are now a promise
+    const { id } = await context.params;
+
+    if (!id) {
+      console.error("🚨 Missing topic ID in API request");
       return NextResponse.json(
-        { success: false, error: "Failed to fetch topic" },
-        { status: 500 }
+        { success: false, error: "Missing id" },
+        { status: 400 }
       );
     }
+
+    console.log(`🔍 Fetching topic with ID: ${id}`);
+
+    const topic = await prisma.topic.findUnique({ where: { id } });
+
+    if (!topic) {
+      return NextResponse.json(
+        { success: false, error: "Topic not found" },
+        { status: 404 }
+      );
+    }
+
+    console.log(`✅ Topic found:`, topic);
+
+    return NextResponse.json({ success: true, topic });
+  } catch (error) {
+    console.error("❌ Error fetching topic:", error);
+    return NextResponse.json(
+      { success: false, error: "Failed to fetch topic" },
+      { status: 500 }
+    );
   }
+}
 
 export async function PUT(request: Request) {
   try {
