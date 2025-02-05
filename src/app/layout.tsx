@@ -2,6 +2,7 @@
 import "./globals.css";
 import { ReactNode } from "react";
 import Footer from "./components/Footer";
+import { Providers } from "./providers";
 
 export const metadata = {
   title: "Project-Rone - Windows 95 Desktop",
@@ -12,9 +13,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body className="min-h-screen bg-win95background text-black flex flex-col">
-        <main className="flex-grow">
-          {children}
-        </main>
+        <Providers>
+          <main className="flex-grow">{children}</main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );
