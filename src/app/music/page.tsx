@@ -24,7 +24,8 @@ export default function Music() {
   const router = useRouter();
 
   // Set initial subscriber count to 19,900 for testing
-  const [subscriberCount, setSubscriberCount] = useState<number>(19900);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const [subscriberCount, setSubscriberCount] = useState<number>(19900);
 
   // The selected track is stored as the track object (it may have a "url" or "files" property)
   const [selectedTrack, setSelectedTrack] = useState(tracks[0]);
