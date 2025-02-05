@@ -5,8 +5,30 @@ import Footer from "./components/Footer";
 import { Providers } from "./providers";
 
 export const metadata = {
-  title: "Project-Rone - Windows 95 Desktop",
-  description: "A Windows 95 styled Next.js site with desktop navigation",
+  title: "RoneDotCom - High Vibes and Good Times",
+  description: "RoneDotCom is a place for high vibes and good times.",
+  keywords: "Rone, Barstool, games, competitions, fun, entertainment",
+  openGraph: {
+    title: "RoneDotCom",
+    description: "A fun, nostalgic site inspired by Windows 95, featuring videos, music, and more!",
+    url: "https://project-rone.vercel.app",
+    type: "website",
+    images: [
+      {
+        url: "/images/windows-95-bg.jpg",
+        width: 1200,
+        height: 630,
+        alt: "RoneDotCom Windows 95 Themed Website",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@yourtwitterhandle",
+    title: "RoneDotCom",
+    description: "Check out RoneDotCom for competitions, videos, and more!",
+    images: ["/images/windows-95-bg.jpg"],
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

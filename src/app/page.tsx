@@ -38,21 +38,27 @@ function DesktopWindow({
   children: React.ReactNode;
   onClose: () => void;
 }) {
-  // Create a ref typed as HTMLDivElement.
+  // Create a ref for the draggable window
   const nodeRef = useRef<HTMLDivElement>(null);
+
+  // Detect screen width to disable dragging on mobile
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
 
   return (
     <Draggable
-      // Cast nodeRef as a MutableRefObject<HTMLElement>
       nodeRef={nodeRef as React.MutableRefObject<HTMLElement>}
       handle=".window-header"
       defaultPosition={{ x: 100, y: 100 }}
+      disabled={isMobile} // Disable dragging on mobile
     >
       <div ref={nodeRef} className="absolute w-96 bg-win95gray border border-black shadow-lg z-50">
         {/* Window Header */}
         <div className="window-header bg-win95blue text-white flex items-center justify-between p-2 cursor-move">
           <span className="font-bold">{title}</span>
-          <button onClick={onClose} className="bg-red-600 text-white px-2 py-0.5 border border-black">
+          <button 
+            onClick={onClose} 
+            className="bg-red-600 text-white px-2 py-0.5 border border-black"
+          >
             X
           </button>
         </div>
@@ -63,6 +69,7 @@ function DesktopWindow({
     </Draggable>
   );
 }
+
 
 export default function Desktop() {
   const [showSideQuestsWindow, setShowSideQuestsWindow] = useState(false);
