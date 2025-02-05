@@ -3,8 +3,14 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
+interface Topic {
+  id: string;
+  title: string;
+  // add additional fields if needed
+}
+
 export default function ForumPage() {
-  const [topics, setTopics] = useState([]);
+  const [topics, setTopics] = useState<Topic[]>([]);
   const router = useRouter();
 
   useEffect(() => {

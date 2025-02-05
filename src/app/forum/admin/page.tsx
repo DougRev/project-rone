@@ -1,20 +1,23 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+
+interface Topic {
+  id: string;
+  title: string;
+}
 
 export default function AdminTopicPage() {
   const { data: session, status } = useSession();
-  const router = useRouter();
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
-  const [topics, setTopics] = useState([]);
+  const [topics, setTopics] = useState<Topic[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState("");
 
   // Fetch topics from the API
-  async function fetchTopics() {
+  const fetchTopics = useCallback(async () => {
     try {
       const res = await fetch("/api/forum/topics");
       const data = await res.json();
@@ -24,12 +27,12 @@ export default function AdminTopicPage() {
     } catch (error) {
       console.error("Failed to fetch topics", error);
     }
-  }
+  }, []);
 
   // Fetch topics on initial load
   useEffect(() => {
     fetchTopics();
-  }, []);
+  }, [fetchTopics]);
 
   // Show a loading message while session is loading.
   if (status === "loading") {
@@ -47,7 +50,7 @@ export default function AdminTopicPage() {
   }
 
   // Create a new topic
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setMessage("");
     try {
@@ -142,7 +145,7 @@ export default function AdminTopicPage() {
 
       {/* List of Topics */}
       <ul className="space-y-4">
-        {topics.map((topic: any) => (
+        {topics.map((topic) => (
           <li key={topic.id} className="border border-black p-3 shadow-md bg-win95paper">
             {editingId === topic.id ? (
               <>

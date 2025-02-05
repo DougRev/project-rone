@@ -1,43 +1,78 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 
-export default function PostPage({ params }) {
+// Define interfaces for your data
+interface User {
+  name?: string | null;
+  email?: string | null;
+}
+
+interface Post {
+  id: string;
+  title: string;
+  content: string;
+  createdAt: string;
+  user: User;
+}
+
+interface Comment {
+  id: string;
+  content: string;
+  createdAt: string;
+  user: User;
+}
+
+export default function PostPage() {
+  // Use the useParams hook to retrieve the dynamic post id
+  const params = useParams() as { id: string };
+  const { id } = params;
   const { data: session } = useSession();
-  const [post, setPost] = useState(null);
-  const [comments, setComments] = useState([]);
+
+  const [post, setPost] = useState<Post | null>(null);
+  const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState("");
 
   useEffect(() => {
     async function fetchPostAndComments() {
-      const postRes = await fetch(`/api/forum/posts?id=${params.id}`);
-      const commentsRes = await fetch(`/api/forum/comments?postId=${params.id}`);
+      try {
+        const postRes = await fetch(`/api/forum/posts?id=${id}`);
+        const commentsRes = await fetch(`/api/forum/comments?postId=${id}`);
 
-      const postData = await postRes.json();
-      const commentsData = await commentsRes.json();
+        const postData = await postRes.json();
+        const commentsData = await commentsRes.json();
 
-      if (postData.success) setPost(postData.post);
-      if (commentsData.success) setComments(commentsData.comments);
+        if (postData.success) setPost(postData.post);
+        if (commentsData.success) setComments(commentsData.comments);
+      } catch (err) {
+        console.error("Error fetching post and comments:", err);
+      }
     }
 
-    fetchPostAndComments();
-  }, [params.id]);
+    if (id) {
+      fetchPostAndComments();
+    }
+  }, [id]);
 
-  async function handleCommentSubmit(e) {
+  async function handleCommentSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!session) return alert("You must be logged in to comment.");
 
-    const res = await fetch("/api/forum/comments", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content: newComment, postId: params.id }),
-    });
-
-    const data = await res.json();
-    if (data.success) {
-      setComments([...comments, data.comment]);
-      setNewComment("");
+    try {
+      const res = await fetch("/api/forum/comments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: newComment, postId: id }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setComments([...comments, data.comment]);
+        setNewComment("");
+      }
+    } catch (err) {
+      console.error("Error submitting comment:", err);
     }
   }
 
@@ -59,7 +94,8 @@ export default function PostPage({ params }) {
         {comments.map((comment) => (
           <div key={comment.id} className="border p-3">
             <p className="text-gray-600 text-sm">
-              {comment.user.name || comment.user.email} - {new Date(comment.createdAt).toLocaleString()}
+              {comment.user.name || comment.user.email} -{" "}
+              {new Date(comment.createdAt).toLocaleString()}
             </p>
             <p>{comment.content}</p>
           </div>

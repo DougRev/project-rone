@@ -5,6 +5,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation"; 
 import Footer from "../app/components/Footer";
 import Draggable from "react-draggable";
+import Image from "next/image";
+
+// Define a type for Side Quests.
+interface SideQuest {
+  title: string;
+  videoId?: string;
+  link?: string;
+}
 
 const icons = [
   { name: "Youtube", href: "/youtube", img: "/icons/my-computer.png" },
@@ -15,10 +23,10 @@ const icons = [
   { name: "Side Quests", href: "", img: "/icons/list.png" }, 
 ];
 
-const sideQuests = [
+const sideQuests: SideQuest[] = [
   { title: "✅ Try Every Crumble Cookie in NYC", videoId: "vWB5kL1gXwM" },
-  { title: "Times Square Rap CD Review", link: "" },
-  { title: "Take a Train to Kensington and Buy Some Dope", link: "" },
+  { title: "Times Square Rap CD Review", link: "/forum/1" },
+  { title: "Discussion Thread 2", link: "/forum/2" },
 ];
 
 function DesktopWindow({
@@ -30,10 +38,16 @@ function DesktopWindow({
   children: React.ReactNode;
   onClose: () => void;
 }) {
-  const nodeRef = useRef(null);
+  // Create a ref typed as HTMLDivElement.
+  const nodeRef = useRef<HTMLDivElement>(null);
 
   return (
-    <Draggable nodeRef={nodeRef} handle=".window-header" defaultPosition={{ x: 100, y: 100 }}>
+    <Draggable
+      // Cast nodeRef as a MutableRefObject<HTMLElement>
+      nodeRef={nodeRef as React.MutableRefObject<HTMLElement>}
+      handle=".window-header"
+      defaultPosition={{ x: 100, y: 100 }}
+    >
       <div ref={nodeRef} className="absolute w-96 bg-win95gray border border-black shadow-lg z-50">
         {/* Window Header */}
         <div className="window-header bg-win95blue text-white flex items-center justify-between p-2 cursor-move">
@@ -52,7 +66,7 @@ function DesktopWindow({
 
 export default function Desktop() {
   const [showSideQuestsWindow, setShowSideQuestsWindow] = useState(false);
-  const router = useRouter(); // ✅ Use router for navigation
+  const router = useRouter();
 
   const handleIconClick = (iconName: string, event: React.MouseEvent) => {
     if (iconName === "Side Quests") {
@@ -61,15 +75,12 @@ export default function Desktop() {
     }
   };
 
-  // ✅ Handles clicking a Side Quest
-  const handleSideQuestClick = (quest: any) => {
-    setShowSideQuestsWindow(false); // Close the window first
-
+  // Handles clicking a Side Quest
+  const handleSideQuestClick = (quest: SideQuest) => {
+    setShowSideQuestsWindow(false);
     if (quest.videoId) {
-      // ✅ Navigate to YouTube and pass the selected video ID
       router.push(`/youtube?video=${quest.videoId}`);
     } else if (quest.link) {
-      // ✅ Navigate to forum discussion
       router.push(quest.link);
     }
   };
@@ -91,14 +102,26 @@ export default function Desktop() {
                 className="flex flex-col items-center cursor-pointer"
               >
                 <div className="p-2 hover:shadow-xl transition-shadow">
-                  <img src={icon.img} alt={icon.name} className="w-16 h-16" />
+                  <Image 
+                    src={icon.img} 
+                    alt={icon.name} 
+                    width={64} 
+                    height={64} 
+                    className="w-16 h-16" 
+                  />
                 </div>
                 <span className="mt-2 text-center text-sm text-white">{icon.name}</span>
               </div>
             ) : (
               <Link key={icon.name} href={icon.href} className="flex flex-col items-center">
                 <div className="p-2 hover:shadow-xl transition-shadow">
-                  <img src={icon.img} alt={icon.name} className="w-16 h-16" />
+                  <Image 
+                    src={icon.img} 
+                    alt={icon.name} 
+                    width={64} 
+                    height={64} 
+                    className="w-16 h-16" 
+                  />
                 </div>
                 <span className="mt-2 text-center text-sm text-white drop-shadow-[1px_1px_1px_rgba(0,0,0,0.7)]">
                   {icon.name}

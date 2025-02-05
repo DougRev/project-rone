@@ -1,28 +1,51 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import NewPostForm from "../../../components/NewPostForm";
 import VoteButtons from "../../../components/VoteButtons";
 
+// Define interfaces for proper typing
+interface Vote {
+  value: number;
+  userId: string;
+}
+
+interface Post {
+  id: string;
+  title: string;
+  content: string;
+  createdAt: string;
+  user: {
+    name?: string;
+    email?: string;
+  };
+  votes?: Vote[];
+}
+
 export default function TopicPage() {
-  const [posts, setPosts] = useState<any[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [topicTitle, setTopicTitle] = useState("Loading...");
   const [loadingPosts, setLoadingPosts] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPosts, setTotalPosts] = useState(0);
   const limit = 5; // Number of posts per page
 
-  const params = useParams();
-  const topicId = params?.id;
+  // Explicitly type params
+  const params = useParams() as { id: string };
+  const topicId = params.id;
+
   const router = useRouter();
   const { data: session } = useSession();
 
-  async function fetchPosts() {
+  // Wrap fetchPosts in useCallback to stabilize its reference.
+  const fetchPosts = useCallback(async () => {
     setLoadingPosts(true);
     try {
-      const res = await fetch(`/api/forum/posts?topicId=${topicId}&page=${page}&limit=${limit}`);
+      const res = await fetch(
+        `/api/forum/posts?topicId=${topicId}&page=${page}&limit=${limit}`
+      );
       const data = await res.json();
       if (data.success) {
         setPosts(data.posts || []);
@@ -34,19 +57,20 @@ export default function TopicPage() {
     } finally {
       setLoadingPosts(false);
     }
-  }
+  }, [topicId, page, limit]);
 
   useEffect(() => {
     if (topicId) {
       fetchPosts();
     }
-  }, [topicId, page]);
+  }, [fetchPosts, topicId, page]);
 
   useEffect(() => {
     async function fetchTopic() {
       try {
         const res = await fetch(`/api/forum/topics/${topicId}`);
-        if (!res.ok) throw new Error(`Error: ${res.status} ${res.statusText}`);
+        if (!res.ok)
+          throw new Error(`Error: ${res.status} ${res.statusText}`);
         const data = await res.json();
         if (data.success && data.topic) {
           setTopicTitle(data.topic.title);
@@ -64,8 +88,7 @@ export default function TopicPage() {
   const totalPages = Math.ceil(totalPosts / limit);
 
   return (
-
-    // Added pb-12 to account for the global footer
+    // Added pb-12 to account for the global footer.
     <div className="p-4 pb-12 bg-win95background min-h-screen">
       {/* Header with Back Button and Dynamic Topic Title */}
       <div className="flex items-center mb-4">
@@ -90,15 +113,20 @@ export default function TopicPage() {
         ) : posts.length === 0 ? (
           <p className="text-white">No posts yet. Be the first to post!</p>
         ) : (
-          posts.map((post: any) => {
+          posts.map((post) => {
             const initialCount =
-              post.votes?.reduce((acc: number, vote: any) => acc + vote.value, 0) || 0;
+              post.votes?.reduce((acc: number, vote: Vote) => acc + vote.value, 0) || 0;
             const currentUserId = session?.user.id;
-            const voteForUser = post.votes?.find((vote: any) => vote.userId === currentUserId);
+            const voteForUser = post.votes?.find(
+              (vote: Vote) => vote.userId === currentUserId
+            );
             const initialVote = voteForUser ? voteForUser.value : 0;
 
             return (
-              <div key={post.id} className="bg-white border border-black p-4 shadow-md">
+              <div
+                key={post.id}
+                className="bg-white border border-black p-4 shadow-md"
+              >
                 <h2 className="text-xl font-semibold mb-1">{post.title}</h2>
                 <p className="text-gray-600 text-sm mb-2">
                   Posted by {post.user.name || post.user.email} on{" "}

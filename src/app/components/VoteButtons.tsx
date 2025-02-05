@@ -44,10 +44,10 @@ export default function VoteButtons({ postId, initialVote, initialCount }: VoteB
       // Rollback on error
       setVoteCount(previousCount);
       setUserVote(previousVote);
-      setError(err.message || "Vote failed");
+      const errorMessage = err instanceof Error ? err.message : "Vote failed";
+      setError(errorMessage);
     }
   }
-  
 
   return (
     <div className="flex items-center space-x-2">

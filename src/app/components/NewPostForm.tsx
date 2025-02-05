@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 
 interface NewPostFormProps {
   topicId: string;
@@ -11,7 +10,6 @@ interface NewPostFormProps {
 
 export default function NewPostForm({ topicId, onPostCreated }: NewPostFormProps) {
   const { data: session } = useSession();
-  const router = useRouter();
   const [showForm, setShowForm] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");

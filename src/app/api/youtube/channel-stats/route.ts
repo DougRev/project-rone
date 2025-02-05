@@ -2,6 +2,9 @@
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
+  // Mark request as used even if not otherwise needed
+  void request;
+  
   const CHANNEL_ID = process.env.YOUTUBE_CHANNEL_ID;
   const API_KEY = process.env.YOUTUBE_API_KEY;
 

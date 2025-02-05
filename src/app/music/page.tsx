@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 // Define your tracks. For "Subscriber-Picked Distracks", include a "files" array with each file having a subscriber goal.
@@ -24,6 +24,7 @@ export default function Music() {
   const router = useRouter();
 
   // Set initial subscriber count to 19,900 for testing
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [subscriberCount, setSubscriberCount] = useState<number>(19900);
 
   // The selected track is stored as the track object (it may have a "url" or "files" property)
@@ -64,7 +65,10 @@ export default function Music() {
   // For multi-file tracks, check the selected file.
   // For single-track selections, check the track url.
   const mediaAvailable = selectedTrack.files
-    ? selectedFile && subscriberCount >= selectedFile.goal && selectedFile.url && selectedFile.url !== "example"
+    ? selectedFile &&
+      subscriberCount >= selectedFile.goal &&
+      selectedFile.url &&
+      selectedFile.url !== "example"
     : selectedTrack.url && selectedTrack.url !== "example";
 
   return (
