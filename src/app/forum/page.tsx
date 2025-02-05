@@ -33,11 +33,16 @@ export default function ForumPage() {
         {topics.map((topic) => (
           <li key={topic.id} className="bg-white border border-black p-3 shadow-md">
             <button
-              onClick={() => router.push(`/forum/topic/${topic.id}`)}
+              onClick={() => {
+                console.log(`Navigating to topic ID: ${topic.id}`); // Debugging
+                router.push(`/forum/topic/${topic.id}`);
+              }}
               className="w-full text-left text-win95blue font-bold underline hover:text-win95blue-dark"
             >
               {topic.title}
             </button>
+
+
           </li>
         ))}
       </ul>

@@ -67,13 +67,23 @@ export default function TopicPage() {
 
   useEffect(() => {
     async function fetchTopic() {
+      if (!topicId) {
+        console.error("No topicId found in URL params!");
+        setTopicTitle("Unknown Topic");
+        return;
+      }
+  
+      console.log(`Fetching topic with ID: ${topicId}`); // Debugging API call
+  
       try {
         const res = await fetch(`/api/forum/topics/${topicId}`);
-        if (!res.ok)
-          throw new Error(`Error: ${res.status} ${res.statusText}`);
+        if (!res.ok) throw new Error(`Error: ${res.status} ${res.statusText}`);
+  
         const data = await res.json();
+        console.log("Topic API Response:", data); // Debugging response
+  
         if (data.success && data.topic) {
-          setTopicTitle(data.topic.title);
+          setTopicTitle(data.topic.title || "Unknown Topic");
         } else {
           setTopicTitle("Unknown Topic");
         }
@@ -82,8 +92,10 @@ export default function TopicPage() {
         setTopicTitle("Unknown Topic");
       }
     }
-    if (topicId) fetchTopic();
+  
+    fetchTopic();
   }, [topicId]);
+  
 
   const totalPages = Math.ceil(totalPosts / limit);
 

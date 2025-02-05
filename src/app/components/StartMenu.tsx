@@ -48,11 +48,6 @@ export default function StartMenu({ onClose, onProfile }: StartMenuProps) {
               </Link>
             </li>
             <li className="px-4 py-2 hover:bg-win95blue hover:text-white cursor-pointer">
-              <Link href="/barstool-things" onClick={onClose}>
-                Barstool Things
-              </Link>
-            </li>
-            <li className="px-4 py-2 hover:bg-win95blue hover:text-white cursor-pointer">
               <Link href="/parties-games" onClick={onClose}>
                 Parties & Games
               </Link>
