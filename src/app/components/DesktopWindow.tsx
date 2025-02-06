@@ -2,7 +2,7 @@
 "use client";
 
 import Draggable from "react-draggable";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 interface DesktopWindowProps {
   title: string;
@@ -12,17 +12,20 @@ interface DesktopWindowProps {
 
 export default function DesktopWindow({ title, onClose, children }: DesktopWindowProps) {
   const [isMinimized, setIsMinimized] = useState(false);
+  // Create a ref for the draggable window
+  const nodeRef = useRef<HTMLDivElement>(null);
 
   return (
     <Draggable handle=".window-header" defaultPosition={{ x: 100, y: 100 }}>
       <div
-        className={`absolute w-96 h-64 border border-black bg-win95gray shadow-lg ${
+        ref={nodeRef}
+        className={`absolute w-10/12 md:w-96 h-64 border border-black bg-win95gray shadow-lg z-50 ${
           isMinimized ? "hidden" : ""
         }`}
       >
         {/* Window Header */}
         <div className="window-header bg-win95blue text-white flex items-center justify-between p-2 cursor-move">
-          <span>{title}</span>
+          <span className="font-bold">{title}</span>
           <div>
             <button
               onClick={() => setIsMinimized(true)}
@@ -38,7 +41,6 @@ export default function DesktopWindow({ title, onClose, children }: DesktopWindo
             </button>
           </div>
         </div>
-
         {/* Window Content */}
         <div className="p-2 overflow-auto h-full">{children}</div>
       </div>

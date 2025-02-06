@@ -7,3 +7,17 @@ body {
   background-color: #008080; /* A teal background reminiscent of some vintage themes */
   font-family: "MS Sans Serif", Tahoma, sans-serif;
 }
+
+@keyframes scroll {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 10s linear infinite;
+}
+

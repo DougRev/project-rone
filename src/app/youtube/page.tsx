@@ -7,6 +7,8 @@ import Footer from "../components/Footer";
 const videos = [
   { title: "Welcome to RoneDotCom", url: "https://www.youtube.com/embed/oJ9n_VWCMW0" },
   { title: "I Tried Every Single Crumbl Cookie in NYC", url: "https://www.youtube.com/embed/vWB5kL1gXwM" },
+  { title: "Live from New Orleans", url: "https://www.youtube.com/embed/5dpkLOobJAk?si=neyFRGJLNINsDVg-" },
+
 ];
 
 function YouTubeContent() {

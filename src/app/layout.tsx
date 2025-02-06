@@ -3,6 +3,7 @@ import "./globals.css";
 import { ReactNode } from "react";
 import Footer from "./components/Footer";
 import { Providers } from "./providers";
+import ScrollingBanner from "./components/ScrollingBanner";
 
 export const metadata = {
   title: "RoneDotCom - High Vibes and Good Times",
@@ -36,6 +37,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <body className="min-h-screen bg-win95background text-black flex flex-col">
         <Providers>
+        <ScrollingBanner />
           <main className="flex-grow">{children}</main>
           <Footer />
         </Providers>

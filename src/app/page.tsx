@@ -99,7 +99,6 @@ export default function Desktop() {
         className="flex-grow bg-cover bg-center p-4 relative"
         style={{ backgroundImage: "url('/images/windows-95-bg.jpg')" }}
       >
-        <h1 className="text-xl font-bold mb-4 text-white drop-shadow-[1px_1px_1px_rgba(0,0,0,0.7)]">RoneDotCom</h1>
         <div className="grid grid-cols-4 gap-6">
           {icons.map((icon) =>
             icon.name === "Side Quests" ? (
